@@ -1,0 +1,30 @@
+{
+  "name": "routergent",
+  "version": "0.1.0",
+  "description": "Standalone router for Snapgent connectors: multi-webview, auto-failover, shared handoff history.",
+  "main": "src/main/main.js",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test \"test/*.test.js\"",
+    "dist": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.snapgent.routergent",
+    "productName": "RouterGent",
+    "files": ["src/**/*", "package.json"],
+    "extraResources": [
+      {
+        "from": "../snapgent-extension",
+        "to": "snapgent-extension",
+        "filter": ["**/*", "!test-*.js", "!**/node_modules/**"]
+      },
+      { "from": "../vscode_mcp.exe", "to": "vscode_mcp.exe" }
+    ],
+    "win": { "target": "portable", "signAndEditExecutable": false }
+  }
+}
