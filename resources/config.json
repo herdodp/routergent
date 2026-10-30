@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "vscode": {
+      "command": "vscode_mcp.exe",
+      "args": [],
+      "env": {}
+    }
+  }
+}

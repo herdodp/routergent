@@ -5,3 +5,4 @@ dist/
 Thumbs.db
 .env
 config.json
+!resources/config.json

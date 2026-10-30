@@ -16,15 +16,14 @@ const APP_ROOT = path.resolve(__dirname, '..', '..'); // routergent/
 // Overridable so a packaged build can ship its own copies (standalone).
 // Packaged build: electron-builder copies these into <resources>/ (extraResources).
 // Dev run: they live next to routergent/ in the repo.
-const RES_DIR = app.isPackaged ? process.resourcesPath : null;
-const EXT_DIR = process.env.ROUTERGENT_EXTENSION_DIR ||
-  (RES_DIR ? path.join(RES_DIR, 'snapgent-extension') : path.resolve(APP_ROOT, '..', 'snapgent-extension'));
+// Packaged: <resources>/. Dev: routergent/resources/ (self-contained copies).
+const RES_DIR = app.isPackaged ? process.resourcesPath : path.join(APP_ROOT, 'resources');
+const EXT_DIR = process.env.ROUTERGENT_EXTENSION_DIR || path.join(RES_DIR, 'snapgent-extension');
 const CONFIG_PATH = process.env.ROUTERGENT_CONFIG ||
   [
-    RES_DIR && path.join(RES_DIR, 'config.json'),
+    path.join(RES_DIR, 'config.json'),
     path.join(APP_ROOT, 'config.json'),
-    path.resolve(APP_ROOT, '..', 'config.json'),
-  ].filter(Boolean).find((p) => fs.existsSync(p));
+  ].find((p) => fs.existsSync(p));
 const MCP_TARGETS = (process.env.ROUTERGENT_MCP || 'vscode').split(',').map((s) => s.trim()).filter(Boolean);
 
 let mainWindow = null;
@@ -227,10 +226,10 @@ function createWindow() {
 app.whenReady().then(async () => {
   loadStore();
   router = new Router({ handoffDir: path.join(app.getPath('userData'), 'handoff') });
-  // Packaged: do not trust absolute paths baked into config.json; use the exe
-  // bundled next to the app (see build.extraResources in package.json).
-  const overrides = RES_DIR ? { vscode: { command: path.join(RES_DIR, 'vscode_mcp.exe') } } : {};
-  hub = new McpHub({ configPath: CONFIG_PATH, only: MCP_TARGETS, overrides, cwd: RES_DIR || undefined });
+  // Do not trust absolute paths baked into config.json; always use the exe
+  // bundled in resources/ (see build.extraResources in package.json).
+  const overrides = { vscode: { command: path.join(RES_DIR, 'vscode_mcp.exe') } };
+  hub = new McpHub({ configPath: CONFIG_PATH, only: MCP_TARGETS, overrides, cwd: RES_DIR });
   wireRouter();
   wireIpc();
   createWindow();

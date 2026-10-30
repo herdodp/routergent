@@ -4,6 +4,16 @@
   "description": "Standalone router for Snapgent connectors: multi-webview, auto-failover, shared handoff history.",
   "main": "src/main/main.js",
   "license": "GPL-3.0-or-later",
+  "author": "herdodp <https://github.com/herdodp>",
+  "homepage": "https://herdodp.github.io/routergent/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/herdodp/routergent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/herdodp/routergent/issues"
+  },
+  "keywords": ["electron", "ai-router", "failover", "mcp", "snapgent", "webview", "agent"],
   "scripts": {
     "start": "electron .",
     "test": "node --test \"test/*.test.js\"",
@@ -19,11 +29,12 @@
     "files": ["src/**/*", "package.json"],
     "extraResources": [
       {
-        "from": "../snapgent-extension",
+        "from": "resources/snapgent-extension",
         "to": "snapgent-extension",
         "filter": ["**/*", "!test-*.js", "!**/node_modules/**"]
       },
-      { "from": "../vscode_mcp.exe", "to": "vscode_mcp.exe" }
+      { "from": "resources/vscode_mcp.exe", "to": "vscode_mcp.exe" },
+      { "from": "resources/config.json", "to": "config.json" }
     ],
     "win": { "target": "portable", "signAndEditExecutable": false }
   }
